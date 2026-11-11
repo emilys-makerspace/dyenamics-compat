@@ -1,7 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.probe;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoModule;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PaletteModule;
 import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.camping.CampingRecolor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +40,7 @@ import net.satisfy.lilis_pottery.core.block.entity.AbstractStorageBlockEntity;
 public final class LetsDoWorldTests {
     private static Block nativeBlock(String id) { return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id)); }
     private static ItemStack dye(String id) { return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(id)), 8); }
-    private static Block block(String addon, String family, DyenamicColor color) { return LetsDoModule.variant(addon, family, color).block().get(); }
+    private static Block block(String addon, String family, DyenamicColor color) { return PaletteModule.variant(addon, family, color).block().get(); }
     private static Player player(GameTestHelper helper) { return helper.makeMockPlayer(GameType.SURVIVAL); }
     private static void floor(GameTestHelper helper) { for (int x = 1; x < 8; x++) for (int z = 1; z < 8; z++) helper.setBlock(x, 0, z, Blocks.STONE); }
     private static void click(GameTestHelper helper, Player player, BlockPos absolute, ItemStack held) {
@@ -164,7 +164,7 @@ public final class LetsDoWorldTests {
         var clayPos = new BlockPos(6, 1, 6);
         helper.setBlock(clayPos, clay);
         helper.getLevel().destroyBlock(helper.absolutePos(clayPos), true);
-        var balls = LetsDoModule.EXTRA_ITEMS.stream().filter(v -> v.family().equals("clay_ball") && v.color() == DyenamicColor.NAVY).findFirst().orElseThrow().item().get();
+        var balls = PaletteModule.EXTRA_ITEMS.stream().filter(v -> v.family().equals("clay_ball") && v.color() == DyenamicColor.NAVY).findFirst().orElseThrow().item().get();
         helper.assertItemEntityCountIs(balls, clayPos, 1.5, 4);
         helper.succeed();
     }
@@ -176,9 +176,9 @@ public final class LetsDoWorldTests {
             var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.fromNamespaceAndPath(entry.getKey(), entry.getValue()));
             helper.assertTrue(tab != null, "Upstream creative tab missing: " + entry.getKey());
             tab.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(net.minecraft.world.flag.FeatureFlags.VANILLA_SET, true, helper.getLevel().registryAccess()));
-            LetsDoModule.VARIANTS.stream().filter(v -> v.addon().equals(entry.getKey()) && v.item() != null).forEach(v ->
+            PaletteModule.VARIANTS.stream().filter(v -> v.addon().equals(entry.getKey()) && v.item() != null).forEach(v ->
                     helper.assertTrue(tab.getDisplayItems().stream().anyMatch(stack -> stack.is(v.item().get())), "Variant missing from upstream creative tab: " + v.id()));
-            LetsDoModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(entry.getKey())).forEach(v ->
+            PaletteModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(entry.getKey())).forEach(v ->
                     helper.assertTrue(tab.getDisplayItems().stream().anyMatch(stack -> stack.is(v.item().get())), "Material missing from upstream creative tab: " + v.id()));
         }
         helper.succeed();
@@ -210,7 +210,7 @@ public final class LetsDoWorldTests {
         }
         ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.furniture.client.FurnitureSideTabs.install();
         var filters = net.satisfy.foundation.client.creative.CreativeSideTabs.get(tab);
-        for (var variant : LetsDoModule.VARIANTS) {
+        for (var variant : PaletteModule.VARIANTS) {
             if (!variant.addon().equals("furniture") || variant.item() == null) continue;
             ItemStack item = new ItemStack(variant.item().get());
             boolean patterned = !variant.nativePattern().contains("%s");
@@ -227,13 +227,13 @@ public final class LetsDoWorldTests {
             var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.fromNamespaceAndPath(entry.getKey(), entry.getValue()));
             tab.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(net.minecraft.world.flag.FeatureFlags.VANILLA_SET, true, helper.getLevel().registryAccess()));
             var items = new java.util.ArrayList<>(tab.getDisplayItems());
-            for (var variant : LetsDoModule.VARIANTS) {
+            for (var variant : PaletteModule.VARIANTS) {
                 if (!variant.addon().equals(entry.getKey()) || variant.item() == null || variant.color() != DyenamicColor.PEACH) continue;
-                assertFamilyGroup(helper, items, variant.source(), color -> LetsDoModule.variant(variant.addon(), variant.family(), color).item().get());
+                assertFamilyGroup(helper, items, variant.source(), color -> PaletteModule.variant(variant.addon(), variant.family(), color).item().get());
             }
-            for (var extra : LetsDoModule.EXTRA_ITEMS) {
+            for (var extra : PaletteModule.EXTRA_ITEMS) {
                 if (!extra.addon().equals(entry.getKey()) || extra.color() != DyenamicColor.PEACH) continue;
-                assertFamilyGroup(helper, items, extra.source(), color -> LetsDoModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(extra.addon()) && v.family().equals(extra.family()) && v.color() == color).findFirst().orElseThrow().item().get());
+                assertFamilyGroup(helper, items, extra.source(), color -> PaletteModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(extra.addon()) && v.family().equals(extra.family()) && v.color() == color).findFirst().orElseThrow().item().get());
             }
         }
         helper.succeed();

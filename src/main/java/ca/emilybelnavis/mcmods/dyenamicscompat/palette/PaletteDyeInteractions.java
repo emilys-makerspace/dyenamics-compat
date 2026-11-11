@@ -1,4 +1,4 @@
-package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo;
+package ca.emilybelnavis.mcmods.dyenamicscompat.palette;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-public final class LetsDoDyeInteractions {
+public final class PaletteDyeInteractions {
     public static DyenamicColor dye(ItemStack stack) {
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         for (DyenamicColor color : DyenamicColor.values()) {
@@ -33,12 +33,12 @@ public final class LetsDoDyeInteractions {
         }
         return null;
     }
-    public static LetsDoModule.Variant family(Block block) {
-        var own = LetsDoModule.variant(block);
+    public static PaletteModule.Variant family(Block block) {
+        var own = PaletteModule.variant(block);
         if (own != null) return own;
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-        return LetsDoModule.VARIANTS.stream().filter(v -> v.addon().equals(id.getNamespace()) &&
-                (v.source().equals(id) || java.util.Arrays.stream(DyeColor.values()).anyMatch(c -> v.nativePattern().formatted(c.getName()).equals(id.getPath()))))
+        return PaletteModule.VARIANTS.stream().filter(v -> v.addon().equals(id.getNamespace()) &&
+                (v.source().equals(id) || (java.util.Set.of("quark", "supplementaries", "suppsquared").contains(v.addon()) && v.family().equals(id.getPath())) || java.util.Arrays.stream(DyeColor.values()).anyMatch(c -> v.nativePattern().formatted(c.getName()).equals(id.getPath()))))
                 .findFirst().orElse(null);
     }
     public static void rightClick(PlayerInteractEvent.RightClickBlock event) {
@@ -53,10 +53,10 @@ public final class LetsDoDyeInteractions {
         if (family.addon().equals("brewery") && ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.brewery.BreweryInteractions.placeCloth(event, family)) return;
         DyenamicColor extra = dye(event.getItemStack());
         DyeColor vanilla = extra == null ? DyeColor.getColor(event.getItemStack()) : null;
-        if (extra == null && (vanilla == null || LetsDoModule.variant(state.getBlock()) == null)) return;
+        if (extra == null && (vanilla == null || PaletteModule.variant(state.getBlock()) == null)) return;
         if (vanilla != null && family.addon().equals("furniture") && !family.nativePattern().contains("%s") && vanilla != DyeColor.WHITE) return;
         if (family.addon().equals("brewery") && family.family().equals("table") && !state.getValue(net.satisfy.brewery.core.block.TableBlock.HAS_TABLECLOTH)) return;
-        Block target = extra != null ? LetsDoModule.variant(family.addon(), family.family(), extra).block().get()
+        Block target = extra != null ? PaletteModule.variant(family.addon(), family.family(), extra).block().get()
                 : BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(family.addon(), family.nativePattern().formatted(vanilla.getName())));
         if (target == Blocks.AIR) return;
         List<BlockPos> positions = family.addon().equals("camping")
@@ -102,5 +102,5 @@ public final class LetsDoDyeInteractions {
             state.updateNeighbourShapes(level, pos, Block.UPDATE_ALL);
         });
     }
-    private LetsDoDyeInteractions() {}
+    private PaletteDyeInteractions() {}
 }

@@ -107,7 +107,7 @@ public final class NativeChecks {
         try (URLClassLoader loader = new URLClassLoader(new URL[]{production}, NativeChecks.class.getClassLoader()) {
             @Override
             protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-                if (name.startsWith("com.simibubi.create.") || name.startsWith("cy.jdkdigital.dyenamics.") || name.startsWith("net.satisfy.") || name.startsWith("dev.architectury.")) throw new ClassNotFoundException(name);
+                if (name.startsWith("com.simibubi.create.") || name.startsWith("cy.jdkdigital.dyenamics.") || name.startsWith("net.satisfy.") || name.startsWith("dev.architectury.") || name.startsWith("net.mehvahdjukaar.") || name.startsWith("org.violetmoon.")) throw new ClassNotFoundException(name);
                 if (name.startsWith("ca.emilybelnavis.mcmods.dyenamicscompat.")) {
                     synchronized (getClassLoadingLock(name)) {
                         Class<?> type = findLoadedClass(name);

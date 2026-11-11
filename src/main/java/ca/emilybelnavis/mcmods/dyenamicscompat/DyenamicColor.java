@@ -2,7 +2,7 @@ package ca.emilybelnavis.mcmods.dyenamicscompat;
 
 import net.minecraft.world.item.DyeColor;
 
-/** Dyenamics 3.5.0's extra palette. The analogue is only used by Create's vanilla UI. */
+/** Dyenamics 3.5.0's extra palette. The analogue bridges native APIs that accept only vanilla colors. */
 public enum DyenamicColor {
     PEACH("peach", 12556403, DyeColor.ORANGE),
     AQUAMARINE("aquamarine", 2915711, DyeColor.CYAN),

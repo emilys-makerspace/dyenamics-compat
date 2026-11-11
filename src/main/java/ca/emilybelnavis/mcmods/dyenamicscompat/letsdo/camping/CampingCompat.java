@@ -1,7 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.camping;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicsCompat;
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoModule;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PaletteModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,10 +17,10 @@ import net.satisfy.camping.core.world.block.entity.TentBlockEntity;
 public final class CampingCompat {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, DyenamicsCompat.MOD_ID);
     public static final java.util.function.Supplier<BlockEntityType<PaletteTentEntity>> TENT = ENTITIES.register("letsdo/camping/tent",
-            () -> BlockEntityType.Builder.of(PaletteTentEntity::new, LetsDoModule.blocks("camping", "tent")).build(null));
+            () -> BlockEntityType.Builder.of(PaletteTentEntity::new, PaletteModule.blocks("camping", "tent")).build(null));
 
     public static void register(IEventBus bus) {
-        var module = new LetsDoModule("camping", "creative_tab");
+        var module = new PaletteModule("camping", "creative_tab");
         module.family("sleeping_bag", "sleeping_bag_%s", "white", false, (color, properties) -> new SleepingBagBlock(color.analogue));
         module.family("tent", "tent_%s", "white", false, (color, properties) -> new TentBlock(properties, color.analogue) {
             @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

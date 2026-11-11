@@ -1,7 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.lilis_pottery;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicsCompat;
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoModule;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PaletteModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.*;
@@ -17,17 +17,17 @@ import net.satisfy.lilis_pottery.core.block.entity.UrnBlockEntity;
 public final class LilisPotteryCompat {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, DyenamicsCompat.MOD_ID);
     public static final java.util.function.Supplier<BlockEntityType<PaletteStorageEntity>> STORAGE = ENTITIES.register("letsdo/lilis_pottery/storage",
-            () -> BlockEntityType.Builder.of(PaletteStorageEntity::new, LetsDoModule.blocks("lilis_pottery", "planter", "plant_bowl", "cupella", "bud_vase", "vase", "garden_pot", "square_pot")).build(null));
+            () -> BlockEntityType.Builder.of(PaletteStorageEntity::new, PaletteModule.blocks("lilis_pottery", "planter", "plant_bowl", "cupella", "bud_vase", "vase", "garden_pot", "square_pot")).build(null));
     public static final java.util.function.Supplier<BlockEntityType<PaletteUrnEntity>> URN = ENTITIES.register("letsdo/lilis_pottery/urn",
-            () -> BlockEntityType.Builder.of(PaletteUrnEntity::new, LetsDoModule.blocks("lilis_pottery", "urn", "amphore")).build(null));
+            () -> BlockEntityType.Builder.of(PaletteUrnEntity::new, PaletteModule.blocks("lilis_pottery", "urn", "amphore")).build(null));
 
     public static void register(IEventBus bus) {
-        var module = new LetsDoModule("lilis_pottery", "lilis_pottery");
+        var module = new PaletteModule("lilis_pottery", "lilis_pottery");
         module.family("clay", "%s_clay", "white", false, (color, properties) -> new Block(properties));
         module.family("bricks", "%s_bricks", "white", false, (color, properties) -> new Block(properties));
         module.family("chiseled_bricks", "chiseled_%s_bricks", "white", false, (color, properties) -> new Block(properties));
         module.family("brick_slab", "%s_brick_slab", "white", false, (color, properties) -> new SlabBlock(properties));
-        module.family("brick_stairs", "%s_brick_stairs", "white", false, (color, properties) -> new StairBlock(LetsDoModule.variant("lilis_pottery", "bricks", color).block().get().defaultBlockState(), properties));
+        module.family("brick_stairs", "%s_brick_stairs", "white", false, (color, properties) -> new StairBlock(PaletteModule.variant("lilis_pottery", "bricks", color).block().get().defaultBlockState(), properties));
         module.family("brick_wall", "%s_brick_wall", "white", false, (color, properties) -> new WallBlock(properties));
         module.family("planter", "%s_planter", "white", false, (color, properties) -> new PlanterBlock(properties) {
             @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new PaletteStorageEntity(pos, state); }

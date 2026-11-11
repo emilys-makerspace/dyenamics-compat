@@ -1,4 +1,4 @@
-package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo;
+package ca.emilybelnavis.mcmods.dyenamicscompat.palette;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicsCompat;
@@ -20,7 +20,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /** Common registration contains no references to optional mod APIs. */
-public final class LetsDoModule {
+public final class PaletteModule {
     public record Variant(String addon, String family, DyenamicColor color, ResourceLocation source,
             String nativePattern, DeferredBlock<? extends Block> block, Supplier<? extends Item> item, boolean tinted) {
         public ResourceLocation id() { return block.getId(); }
@@ -33,8 +33,10 @@ public final class LetsDoModule {
     private final DeferredRegister.Items items = DeferredRegister.createItems(DyenamicsCompat.MOD_ID);
     private final String addon;
     private final String tab;
+    private final String prefix;
 
-    public LetsDoModule(String addon, String tab) { this.addon = addon; this.tab = tab; }
+    public PaletteModule(String addon, String tab) { this(addon, tab, "letsdo/" + addon); }
+    public PaletteModule(String addon, String tab, String prefix) { this.addon = addon; this.tab = tab; this.prefix = prefix; }
 
     public void family(String family, String nativePattern, String referenceColor, boolean tinted,
             BiFunction<DyenamicColor, BlockBehaviour.Properties, ? extends Block> factory) {
@@ -45,7 +47,7 @@ public final class LetsDoModule {
             BiFunction<DyenamicColor, BlockBehaviour.Properties, ? extends Block> factory, Function<Block, Item> itemFactory) {
         ResourceLocation source = ResourceLocation.fromNamespaceAndPath(addon, nativePattern.formatted(referenceColor));
         for (DyenamicColor color : DyenamicColor.values()) {
-            String path = "letsdo/" + addon + "/" + color.id + "_" + family;
+            String path = prefix + "/" + color.id + "_" + family;
             DeferredBlock<Block> block = blocks.register(path, () -> {
                 Block original = BuiltInRegistries.BLOCK.get(source);
                 if (original == net.minecraft.world.level.block.Blocks.AIR) throw new IllegalStateException("Missing pinned upstream block: " + source);
@@ -59,7 +61,7 @@ public final class LetsDoModule {
 
     public void itemFamily(String family, String nativePattern) {
         for (DyenamicColor color : DyenamicColor.values()) {
-            String path = "letsdo/" + addon + "/" + color.id + "_" + family;
+            String path = prefix + "/" + color.id + "_" + family;
             var item = items.register(path, () -> new Item(new Item.Properties()));
             EXTRA_ITEMS.add(new ExtraItem(addon, family, color, ResourceLocation.fromNamespaceAndPath(addon, nativePattern.formatted("white")), item, id(path)));
         }
@@ -72,7 +74,7 @@ public final class LetsDoModule {
     }
 
     private void creativeTab(BuildCreativeModeTabContentsEvent event) {
-        if (!event.getTabKey().location().equals(ResourceLocation.fromNamespaceAndPath(addon, tab))) return;
+        if (tab != null && !event.getTabKey().location().equals(ResourceLocation.fromNamespaceAndPath(addon, tab))) return;
         // Anchor each family to the last native counterpart in the existing tab order.
         var groups = new java.util.LinkedHashMap<String, List<net.minecraft.world.item.ItemStack>>();
         var representatives = new java.util.LinkedHashMap<String, ResourceLocation>();
@@ -108,12 +110,16 @@ public final class LetsDoModule {
             List<net.minecraft.world.item.ItemStack> additions, net.minecraft.world.item.CreativeModeTab.TabVisibility visibility) {
         net.minecraft.world.item.ItemStack anchor = originals.stream().filter(matches).reduce((first, last) -> last).orElse(null);
         for (var addition : additions) {
-            if (anchor == null) event.accept(addition, visibility);
+            if (anchor == null) return;
             else event.insertAfter(anchor, addition, visibility);
             anchor = addition;
         }
     }
 
+    public static String prefix(String addon) {
+        String path = VARIANTS.stream().filter(v -> v.addon().equals(addon)).findFirst().orElseThrow().id().getPath();
+        return path.substring(0, path.lastIndexOf('/'));
+    }
     public static Variant variant(Block block) {
         return VARIANTS.stream().filter(v -> v.block().get() == block).findFirst().orElse(null);
     }

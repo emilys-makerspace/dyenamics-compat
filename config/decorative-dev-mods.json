@@ -1,0 +1,37 @@
+[
+  {
+    "id": "supplementaries",
+    "filename": "supplementaries-1.21.1-4.0.2-neoforge.jar",
+    "url": "https://cdn.modrinth.com/data/fFEIiSDQ/versions/rWq0ko29/supplementaries-1.21.1-4.0.2-neoforge.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "092034ac007c327c9dd58c68ae585df59fa523a5ca40da88b34ad8f1c6347523d302e490acc1650eae6837f46979442ea8a8c151802074de2da99c396ec28894"
+  },
+  {
+    "id": "suppsquared",
+    "filename": "suppsquared-neoforge-1.21-1.2.18.jar",
+    "url": "https://cdn.modrinth.com/data/dCCkNFwE/versions/1uYFhgHN/suppsquared-neoforge-1.21-1.2.18.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "e396e5b460fcbed33fb9ee53c6e58e47df7a98a93354c91d5a28d407d82eb835baeabbc92fe7cf41fcfe070fdd7f5b78b1e2ba302eb1cec149c7cc09f5bdbad9"
+  },
+  {
+    "id": "quark",
+    "filename": "Quark-4.1-488.jar",
+    "url": "https://cdn.modrinth.com/data/qnQsVE2z/versions/pMjjsBGF/Quark-4.1-488.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "06f68ae18faa06497bf2495ef8c34b6f34cccd304939736e009aec024879b2998234bc4fedd7abd9125112e7c0afeb5fd7ddbcc54b6034bd4c95b479ed8880f4"
+  },
+  {
+    "id": "moonlight",
+    "filename": "moonlight-1.21.1-3.8.3-neoforge.jar",
+    "url": "https://cdn.modrinth.com/data/twkfQtEc/versions/yBea1yLM/moonlight-1.21.1-3.8.3-neoforge.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "7b6479af8052419080bb1f5d28742daeef38a62bf33f2b47b70a1dafb01a06afd485cbc22e9f95c210e72b62364b96f539257dc8e03f5631a586ee9c4b5121bf"
+  },
+  {
+    "id": "zeta",
+    "filename": "Zeta-1.1-40.jar",
+    "url": "https://cdn.modrinth.com/data/MVARlG2f/versions/9GjNW2Gf/Zeta-1.1-40.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "a81dcf44f2bfd0fc1a52f00d9ca47a84ad2baf067adedb35eec859f6b9cec7b61ca432e549a3342b10902f84e76d70224cd54400285c8b13a0926835a62c667c"
+  }
+]

@@ -41,24 +41,33 @@ def runtimeLetsDo = new LinkedHashSet(requestedLetsDo)
 if (runtimeLetsDo.any { it in ['bakery', 'brewery', 'candlelight'] }) runtimeLetsDo.add('farm_and_charm')
 def letsDoRuntime = files(letsDoSpecs.findAll { runtimeLetsDo.contains(it.id) || !it.filename.startsWith('letsdo-') }
         .collect { file('libs/letsdo/' + it.filename) }) + files('libs/letsdo/foundation-neoforge-1.0.7.jar')
+def decorativeSpecs = new groovy.json.JsonSlurper().parse(file('config/decorative-dev-mods.json'))
+def decorativeLibraries = files(decorativeSpecs.collect { file('libs/decorative/' + it.filename) })
 def compatProfile = providers.gradleProperty('compatProfile').getOrElse('all')
-if (!(compatProfile in ['all', 'letsdo', 'letsdo-only', 'both', 'create', 'dyenamics', 'none'])) {
-    throw new GradleException('compatProfile must be all, letsdo, letsdo-only, both, create, dyenamics, or none')
+if (!(compatProfile in ['all', 'letsdo', 'letsdo-only', 'both', 'create', 'dyenamics', 'none', 'decorative', 'decorative-only', 'quark', 'supplementaries', 'suppsquared'])) {
+    throw new GradleException('Unknown compatProfile: ' + compatProfile)
 }
 dependencies {
     compileOnly createJar
     compileOnly createLibraries
+    compileOnly decorativeLibraries
+    integrationProbeCompileOnly decorativeLibraries
+    nativeChecksImplementation decorativeLibraries
     compileOnly letsDoLibraries
     integrationProbeCompileOnly letsDoLibraries
     nativeChecksImplementation letsDoLibraries
     nativeChecksImplementation createJar
     nativeChecksImplementation createLibraries
+    if (compatProfile in ['all', 'decorative', 'decorative-only']) runtimeOnly decorativeLibraries
+    if (compatProfile == 'quark') { runtimeOnly files(decorativeSpecs.findAll { it.id in ['quark', 'zeta'] }.collect { file('libs/decorative/' + it.filename) }); runtimeOnly fileTree('libs/letsdo') { include 'biolith*' } }
+    if (compatProfile in ['supplementaries', 'suppsquared']) runtimeOnly files(decorativeSpecs.findAll { it.id in ['supplementaries', 'moonlight'] || (compatProfile == 'suppsquared' && it.id == 'suppsquared') }.collect { file('libs/decorative/' + it.filename) })
+    if (compatProfile in ['decorative', 'decorative-only']) runtimeOnly fileTree('libs/letsdo') { include 'biolith*' }
     if (compatProfile in ['all', 'letsdo', 'letsdo-only']) runtimeOnly letsDoRuntime
     if (compatProfile in ['all', 'both', 'create']) {
         runtimeOnly createJar
         runtimeOnly createLibraries
     }
-    if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics']) runtimeOnly dyenamicsJar
+    if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics', 'decorative', 'quark', 'supplementaries', 'suppsquared']) runtimeOnly dyenamicsJar
 }
 
 neoForge {
@@ -87,7 +96,7 @@ tasks.named('runServer', JavaExec) { standardInput = System.in }
 // Fetch only development inputs. Upstream jars are never copied into the release jar.
 tasks.register('setupDevMods') {
     group = 'development'
-    description = 'Download the exact tismcraft Create/Dyenamics jars and extract Create development libraries.'
+    description = 'Download the pinned tismcraft development mods and extract bundled development libraries.'
     doLast {
         def specifications = [
             ['create-1.21.1-6.0.10.jar', 'https://cdn.modrinth.com/data/LNytGWDc/versions/UjX6dr61/create-1.21.1-6.0.10.jar', 'SHA-512', '11cc8fc049d2f67f6548c7abfada6b82a3adb5c7ca410a742de04bbca76e03862c518721b88d806f6e6d768a4d68531fdb903a85859b25d1484d550cc7bafd4b'],
@@ -108,10 +117,11 @@ tasks.register('setupDevMods') {
             def digest = java.security.MessageDigest.getInstance(spec[2]).digest(target.bytes).encodeHex().toString()
             if (digest != spec[3]) throw new GradleException('Checksum mismatch: ' + spec[0])
         }
-        def letsDoSpecifications = new groovy.json.JsonSlurper().parse(file('config/letsdo-dev-mods.json'))
+        def letsDoSpecifications = new groovy.json.JsonSlurper().parse(file('config/letsdo-dev-mods.json')).collect { it + [directory: 'letsdo'] } + new groovy.json.JsonSlurper().parse(file('config/decorative-dev-mods.json')).collect { it + [directory: 'decorative'] }
+        file('libs/decorative').mkdirs()
         file('libs/letsdo').mkdirs()
         letsDoSpecifications.each { spec ->
-            def target = file('libs/letsdo/' + spec.filename)
+            def target = file('libs/' + spec.directory + '/' + spec.filename)
             if (!target.exists()) {
                 def temporary = file(target.path + '.download')
                 try {
@@ -155,7 +165,7 @@ tasks.register('prepareDevRuntime') {
     description = 'Prepare isolated development run directories for the selected compatibility profile.'
     dependsOn tasks.named('setupDevMods')
     doLast {
-        if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics']) {
+        if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics', 'decorative', 'quark', 'supplementaries', 'suppsquared']) {
             // The pinned upstream Dyenamics jar incorrectly excludes Minecraft 1.21.1.
             // Use NeoForge's documented dev-run override, without modifying the upstream jar.
             ['client', 'server', 'gametest'].each { kind ->
@@ -191,7 +201,7 @@ if (providers.gradleProperty('worldTests').isPresent()) {
         gameTestServer {
             type = 'gameTestServer'
             gameDirectory = file('run/' + compatProfile + '/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'dyenamicscompat_probe'
+            systemProperty 'neoforge.enabledGameTestNamespaces', providers.gradleProperty('decorativeTests').isPresent() ? 'dyenamicscompat_decorative' : 'dyenamicscompat_probe,dyenamicscompat_decorative'
         }
     }
     tasks.named('runGameTestServer') { dependsOn tasks.named('prepareDevRuntime') }

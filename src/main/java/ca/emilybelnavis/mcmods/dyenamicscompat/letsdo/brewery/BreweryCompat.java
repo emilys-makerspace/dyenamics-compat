@@ -1,6 +1,6 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.brewery;
 
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoModule;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PaletteModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +15,7 @@ import net.satisfy.brewery.core.block.TableBlock;
 
 public final class BreweryCompat {
     public static void register(IEventBus bus) {
-        var module = new LetsDoModule("brewery", "brewery");
+        var module = new PaletteModule("brewery", "brewery");
         module.family("patterned_wool", "patterned_wool", "white", true, (color, properties) -> new PatternedWoolBlock(properties));
         module.family("patterned_carpet", "patterned_carpet_block", "white", true, (color, properties) -> new PatternedCarpetBlock(properties));
         module.family("table", "table", "white", true, (color, properties) -> new TableBlock(properties) {
@@ -25,7 +25,7 @@ public final class BreweryCompat {
                 if (!level.isClientSide) {
                     var original = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.parse("brewery:table"));
                     level.setBlockAndUpdate(pos, original.withPropertiesOf(state).setValue(HAS_TABLECLOTH, false));
-                    var carpet = new ItemStack(LetsDoModule.variant("brewery", "patterned_carpet", color).item().get());
+                    var carpet = new ItemStack(PaletteModule.variant("brewery", "patterned_carpet", color).item().get());
                     if (!player.addItem(carpet)) player.drop(carpet, false);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);

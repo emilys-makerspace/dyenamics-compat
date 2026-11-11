@@ -1,7 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.probe;
 
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoModule;
-import ca.emilybelnavis.mcmods.dyenamicscompat.letsdo.LetsDoPack;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PaletteModule;
+import ca.emilybelnavis.mcmods.dyenamicscompat.palette.PalettePack;
 import com.google.gson.*;
 import java.nio.file.*;
 import java.util.*;
@@ -29,12 +29,12 @@ public final class RegistryProbe {
             JsonObject report = new JsonObject();
             try {
                 int blocks = 0, states = 0, entities = 0;
-                Map<String, Integer> families = new java.util.HashMap<>(Map.of("brewery", 3, "camping", 2, "furniture", 5, "hearth_and_timber", 1, "lilis_pottery", 15));
+                Map<String, Integer> families = new java.util.HashMap<>(Map.of("supplementaries", 7, "suppsquared", 2, "quark", 7, "brewery", 3, "camping", 2, "furniture", 5, "hearth_and_timber", 1, "lilis_pottery", 15));
                 if (ModList.get().isLoaded("furniture") && ModList.get().isLoaded("dyenamics")) families.put("furniture", FurnitureChecks.expectedFamilies());
                 int expected = ModList.get().isLoaded("dyenamics") ? families.entrySet().stream().filter(e -> ModList.get().isLoaded(e.getKey())).mapToInt(e -> e.getValue() * 18).sum() : 0;
-                check(LetsDoModule.VARIANTS.size() == expected, "Optional-mod gate registered an incorrect number of variants");
+                check(PaletteModule.VARIANTS.size() == expected, "Optional-mod gate registered an incorrect number of variants");
                 var registries = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-                for (var variant : LetsDoModule.VARIANTS) {
+                for (var variant : PaletteModule.VARIANTS) {
                     blocks++;
                     check(BuiltInRegistries.BLOCK.getKey(variant.block().get()).equals(variant.id()), "Registry identity mismatch");
                     for (var state : variant.block().get().getStateDefinition().getPossibleStates()) {
@@ -66,10 +66,10 @@ public final class RegistryProbe {
     }
     private static JsonObject resources() throws Exception {
         JsonObject counts = new JsonObject();
-        if (LetsDoModule.VARIANTS.isEmpty()) return counts;
+        if (PaletteModule.VARIANTS.isEmpty()) return counts;
         for (PackType type : PackType.values()) {
             List<Pack> packs = new ArrayList<>();
-            LetsDoPack.findPacks(new AddPackFindersEvent(type, source -> source.loadPacks(packs::add), false));
+            PalettePack.findPacks(new AddPackFindersEvent(type, source -> source.loadPacks(packs::add), false));
             for (Pack pack : packs) try (PackResources resources = pack.open()) {
                 Map<ResourceLocation, net.minecraft.server.packs.resources.IoSupplier<InputStream>> all = new LinkedHashMap<>();
                 for (String namespace : resources.getNamespaces(type)) resources.listResources(type, namespace, "", all::put);
@@ -95,7 +95,7 @@ public final class RegistryProbe {
                 }
                 if (type == PackType.CLIENT_RESOURCES) {
                     int patterned = 0;
-                    for (var variant : LetsDoModule.VARIANTS) {
+                    for (var variant : PaletteModule.VARIANTS) {
                         if (!variant.addon().equals("furniture") || variant.nativePattern().contains("%s") || variant.color() != ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor.PEACH) continue;
                         String prefix = "textures/block/" + variant.id().getPath() + "/derived/";
                         var peers = all.entrySet().stream().filter(e -> e.getKey().getPath().startsWith(prefix) && e.getKey().getPath().endsWith(".png")).toList();

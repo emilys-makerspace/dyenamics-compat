@@ -1,4 +1,4 @@
-package ca.emilybelnavis.mcmods.dyenamicscompat.letsdo;
+package ca.emilybelnavis.mcmods.dyenamicscompat.palette;
 
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
 import ca.emilybelnavis.mcmods.dyenamicscompat.PaletteTextures;
@@ -17,7 +17,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 /** Derives resources locally from installed upstream jars; no upstream artwork is redistributed. */
-public final class LetsDoPack extends AbstractPackResources {
+public final class PalettePack extends AbstractPackResources {
     private final PackType type;
     private final Map<ResourceLocation, IoSupplier<InputStream>> resources = new LinkedHashMap<>();
     private final Map<String, List<String>> files = new HashMap<>();
@@ -25,28 +25,28 @@ public final class LetsDoPack extends AbstractPackResources {
     private final Map<String, JsonElement> sourceJson = new HashMap<>();
     private static final Gson GSON = new Gson();
 
-    private LetsDoPack(PackLocationInfo location, PackType type, boolean full) {
+    private PalettePack(PackLocationInfo location, PackType type, boolean full) {
         super(location);
         this.type = type;
         if (full) build();
     }
     public static void findPacks(AddPackFindersEvent event) {
         PackType type = event.getPackType();
-        var location = new PackLocationInfo("dyenamicscompat_letsdo_" + type.getDirectory(), Component.literal("Dyenamics Compat: Let's Do"), PackSource.BUILT_IN, Optional.empty());
+        var location = new PackLocationInfo("dyenamicscompat_letsdo_" + type.getDirectory(), Component.literal("Dyenamics Compat: Palettes"), PackSource.BUILT_IN, Optional.empty());
         var supplier = new Pack.ResourcesSupplier() {
-            @Override public LetsDoPack openPrimary(PackLocationInfo info) { return new LetsDoPack(info, type, false); }
-            @Override public LetsDoPack openFull(PackLocationInfo info, Pack.Metadata metadata) { return new LetsDoPack(info, type, true); }
+            @Override public PalettePack openPrimary(PackLocationInfo info) { return new PalettePack(info, type, false); }
+            @Override public PalettePack openFull(PackLocationInfo info, Pack.Metadata metadata) { return new PalettePack(info, type, true); }
         };
-        Pack pack = Pack.readMetaAndCreate(location, supplier, type, new PackSelectionConfig(true, Pack.Position.BOTTOM, false));
-        if (pack == null) throw new IllegalStateException("Unable to initialize Let's Do palette resources");
+        Pack pack = Pack.readMetaAndCreate(location, supplier, type, new PackSelectionConfig(true, Pack.Position.TOP, false));
+        if (pack == null) throw new IllegalStateException("Unable to initialize palette resources");
         event.addRepositorySource(consumer -> consumer.accept(pack.hidden()));
     }
     private void build() {
         JsonObject language = new JsonObject();
-        for (var variant : LetsDoModule.VARIANTS) {
+        for (var variant : PaletteModule.VARIANTS) {
             if (type == PackType.CLIENT_RESOURCES) {
                 String name = "blockstates/" + variant.id().getPath() + ".json";
-                json(LetsDoModule.id(name), remapModels(read(variant.addon(), "assets/" + variant.addon() + "/blockstates/" + variant.source().getPath() + ".json"), variant));
+                json(PaletteModule.id(name), remapModels(read(variant.addon(), "assets/" + variant.addon() + "/blockstates/" + variant.source().getPath() + ".json"), variant));
                 if (variant.item() != null) model(variant.source().withPath("item/" + variant.source().getPath()), variant, "item/" + variant.id().getPath());
                 String label = title(variant.color().id + " " + variant.family());
                 language.addProperty("block.dyenamicscompat." + variant.id().getPath().replace('/', '.'), label);
@@ -54,8 +54,8 @@ public final class LetsDoPack extends AbstractPackResources {
                 addData(variant);
             }
         }
-        for (var item : LetsDoModule.EXTRA_ITEMS) {
-            var representative = LetsDoModule.variant(item.addon(), "clay", item.color());
+        for (var item : PaletteModule.EXTRA_ITEMS) {
+            var representative = PaletteModule.VARIANTS.stream().filter(v -> v.addon().equals(item.addon()) && v.color() == item.color()).findFirst().orElseThrow();
             if (type == PackType.CLIENT_RESOURCES) {
                 model(item.source().withPath("item/" + item.source().getPath()), representative, "item/" + item.id().getPath());
                 language.addProperty("item.dyenamicscompat." + item.id().getPath().replace('/', '.'), title(item.color().id + " " + item.family()));
@@ -63,15 +63,29 @@ public final class LetsDoPack extends AbstractPackResources {
                 itemData(item);
             }
         }
-        if (type == PackType.CLIENT_RESOURCES) json(LetsDoModule.id("lang/en_us.json"), language);
+        if (type == PackType.CLIENT_RESOURCES) json(PaletteModule.id("lang/en_us.json"), language);
         else {
             addUpstreamTags();
+            if (PaletteModule.VARIANTS.stream().anyMatch(v -> v.addon().equals("supplementaries"))) {
+                bridgeRecipe("supplementaries", "present_dye");
+                bridgeRecipe("supplementaries", "trapped_present");
+            }
+            if (PaletteModule.VARIANTS.stream().anyMatch(v -> v.addon().equals("suppsquared"))) bridgeRecipe("suppsquared", "sack_dye");
+            if (PaletteModule.EXTRA_ITEMS.stream().anyMatch(i -> i.addon().equals("quark") && i.family().equals("shard"))) {
+                // Quark's mixed-shard recipe excludes each single-color glass recipe.
+                // Extend that list so matching extra shards cannot also turn into dirty glass.
+                String recipe = "recipe/tweaks/crafting/glass/mixed_dirty_glass.json";
+                var mixed = read("quark", "data/quark/" + recipe).getAsJsonObject();
+                for (var item : PaletteModule.EXTRA_ITEMS) if (item.addon().equals("quark") && item.family().equals("shard"))
+                    mixed.getAsJsonArray("exclusions").add(item.id() + "/glass");
+                json(ResourceLocation.fromNamespaceAndPath("quark", recipe), mixed);
+            }
             tags.forEach((id, values) -> {
                 JsonObject tag = new JsonObject(); tag.addProperty("replace", false); tag.add("values", values); json(id, tag);
             });
         }
     }
-    private JsonElement remapModels(JsonElement input, LetsDoModule.Variant variant) {
+    private JsonElement remapModels(JsonElement input, PaletteModule.Variant variant) {
         if (input.isJsonObject()) {
             JsonObject out = new JsonObject();
             input.getAsJsonObject().entrySet().forEach(e -> {
@@ -85,9 +99,9 @@ public final class LetsDoPack extends AbstractPackResources {
         if (input.isJsonArray()) { JsonArray out = new JsonArray(); input.getAsJsonArray().forEach(e -> out.add(remapModels(e, variant))); return out; }
         return input.deepCopy();
     }
-    private ResourceLocation model(ResourceLocation source, LetsDoModule.Variant variant, String overridePath) {
+    private ResourceLocation model(ResourceLocation source, PaletteModule.Variant variant, String overridePath) {
         if (source.getNamespace().equals("minecraft")) return source;
-        ResourceLocation target = LetsDoModule.id(overridePath != null ? overridePath : variant.id().getPath() + "/derived/" + source.getNamespace() + "/" + source.getPath());
+        ResourceLocation target = PaletteModule.id(overridePath != null ? overridePath : variant.id().getPath() + "/derived/" + source.getNamespace() + "/" + source.getPath());
         ResourceLocation resource = target.withPath("models/" + target.getPath() + ".json");
         if (resources.containsKey(resource)) return target;
         String path = "assets/" + source.getNamespace() + "/models/" + source.getPath() + ".json";
@@ -105,8 +119,8 @@ public final class LetsDoPack extends AbstractPackResources {
         json(resource, data);
         return target;
     }
-    private ResourceLocation texture(ResourceLocation source, LetsDoModule.Variant variant) {
-        if (!source.getNamespace().equals(variant.addon())) return source;
+    private ResourceLocation texture(ResourceLocation source, PaletteModule.Variant variant) {
+        if (!ModList.get().isLoaded(source.getNamespace())) return source;
         String whitePath = source.getPath();
         boolean patterned = variant.addon().equals("furniture") && !variant.nativePattern().contains("%s");
         if (patterned) {
@@ -114,13 +128,13 @@ public final class LetsDoPack extends AbstractPackResources {
             whitePath = source.getPath().replaceAll("(?<=_|/)" + java.util.regex.Pattern.quote(token) + "(?=_|/|$)", "white");
             if (whitePath.equals(source.getPath())) return source;
         }
-        String redPath = whitePath.replaceAll("(?<=_|/)white(?=_|/|$)", "red");
+        String redPath = whitePath.replaceAll("(?<![a-z])white(?=_|/|$)", "red");
         if (redPath.equals(whitePath)) return source;
         String original = "assets/" + source.getNamespace() + "/textures/" + source.getPath() + ".png";
         String white = "assets/" + source.getNamespace() + "/textures/" + whitePath + ".png";
         String red = "assets/" + source.getNamespace() + "/textures/" + redPath + ".png";
         if (!exists(source.getNamespace(), white) || !exists(source.getNamespace(), red)) return source;
-        ResourceLocation target = LetsDoModule.id("block/" + variant.id().getPath() + "/derived/" + source.getNamespace() + "/" + source.getPath());
+        ResourceLocation target = PaletteModule.id("block/" + variant.id().getPath() + "/derived/" + source.getNamespace() + "/" + source.getPath());
         ResourceLocation resource = target.withPath("textures/" + target.getPath() + ".png");
         resources.computeIfAbsent(resource, key -> new IoSupplier<>() {
             private byte[] png;
@@ -131,15 +145,19 @@ public final class LetsDoPack extends AbstractPackResources {
         });
         return target;
     }
-    private void addData(LetsDoModule.Variant v) {
+    private void addData(PaletteModule.Variant v) {
         String sourceLoot = "data/" + v.addon() + "/loot_table/blocks/" + v.source().getPath() + ".json";
         if (exists(v.addon(), sourceLoot)) json(v.id().withPath("loot_table/blocks/" + v.id().getPath() + ".json"), replaceIds(read(v.addon(), sourceLoot), replacements(v.addon(), v.color())));
         if (v.item() == null) return;
-        String tag = "letsdo/" + v.addon() + "/" + v.family();
-        addTag(LetsDoModule.id("tags/item/" + tag + ".json"), v.id().toString());
+        String tag = PaletteModule.prefix(v.addon()) + "/" + v.family();
+        addTag(PaletteModule.id("tags/item/" + tag + ".json"), v.id().toString());
         for (var dye : net.minecraft.world.item.DyeColor.values()) {
             var source = ResourceLocation.fromNamespaceAndPath(v.addon(), v.nativePattern().formatted(dye.getName()));
-            if (net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(source)) addTag(LetsDoModule.id("tags/item/" + tag + ".json"), source.toString());
+            if (net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(source)) addTag(PaletteModule.id("tags/item/" + tag + ".json"), source.toString());
+        }
+        if (java.util.Set.of("supplementaries", "suppsquared", "quark").contains(v.addon())) {
+            var blank = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(v.addon(), v.family());
+            if (net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(blank)) addTag(PaletteModule.id("tags/item/" + tag + ".json"), blank.toString());
         }
         JsonArray ingredients = new JsonArray();
         ingredients.add(object("tag", "dyenamicscompat:" + tag));
@@ -148,7 +166,7 @@ public final class LetsDoPack extends AbstractPackResources {
         if (v.addon().equals("brewery") && v.family().equals("table")) ingredients.add(object("item", "brewery:patterned_carpet"));
         coloring(v.id().getPath() + "/dyeing", v.id(), ingredients);
         if (v.addon().equals("brewery") && v.family().equals("patterned_carpet")) {
-            addTag(LetsDoModule.id("tags/item/" + tag + ".json"), "brewery:patterned_carpet");
+            addTag(PaletteModule.id("tags/item/" + tag + ".json"), "brewery:patterned_carpet");
         }
         if (v.color() == DyenamicColor.PEACH) {
             for (var dye : net.minecraft.world.item.DyeColor.values()) {
@@ -160,23 +178,37 @@ public final class LetsDoPack extends AbstractPackResources {
                 JsonArray reverse = new JsonArray();
                 reverse.add(object("tag", "dyenamicscompat:" + tag + "_extra"));
                 reverse.add(object("item", "minecraft:" + dye.getName() + "_dye"));
-                coloring("letsdo/" + v.addon() + "/" + v.family() + "/vanilla_" + dye.getName(), nativeItem, reverse);
+                coloring(PaletteModule.prefix(v.addon()) + "/" + v.family() + "/vanilla_" + dye.getName(), nativeItem, reverse);
             }
         }
-        addTag(LetsDoModule.id("tags/item/" + tag + "_extra.json"), v.id().toString());
+        addTag(PaletteModule.id("tags/item/" + tag + "_extra.json"), v.id().toString());
         copyCrafting(v.addon(), v.source(), v.id(), v.color());
     }
-    private void itemData(LetsDoModule.ExtraItem item) {
-        String tag = "letsdo/" + item.addon() + "/" + item.family();
-        addTag(LetsDoModule.id("tags/item/" + tag + ".json"), item.id().toString());
-        addTag(LetsDoModule.id("tags/item/" + tag + ".json"), item.source().toString());
+    private void itemData(PaletteModule.ExtraItem item) {
+        String tag = PaletteModule.prefix(item.addon()) + "/" + item.family();
+        addTag(PaletteModule.id("tags/item/" + tag + ".json"), item.id().toString());
+        addTag(PaletteModule.id("tags/item/" + tag + ".json"), item.source().toString());
         JsonArray ingredients = new JsonArray(); ingredients.add(object("tag", "dyenamicscompat:" + tag)); ingredients.add(object("item", "dyenamics:" + item.color().id + "_dye"));
         coloring(item.id().getPath() + "/dyeing", item.id(), ingredients);
+        if (item.addon().equals("quark") && item.family().equals("shard")) {
+            addTag(ResourceLocation.parse("quark:tags/item/shards.json"), item.id().toString());
+            for (var dye : net.minecraft.world.item.DyeColor.values())
+                addTag(PaletteModule.id("tags/item/" + tag + ".json"), "quark:" + dye.getName() + "_shard");
+            addTag(PaletteModule.id("tags/item/" + tag + "_extra.json"), item.id().toString());
+            if (item.color() == DyenamicColor.PEACH) for (var dye : net.minecraft.world.item.DyeColor.values()) {
+                JsonArray reverse = new JsonArray(); reverse.add(object("tag", "dyenamicscompat:" + tag + "_extra")); reverse.add(object("item", "minecraft:" + dye.getName() + "_dye"));
+                coloring(PaletteModule.prefix(item.addon()) + "/shard/vanilla_" + dye.getName(), ResourceLocation.parse("quark:" + dye.getName() + "_shard"), reverse);
+            }
+            JsonObject recycle = object("type", "minecraft:crafting_shaped"); recycle.add("pattern", GSON.toJsonTree(List.of("##", "##")));
+            JsonObject key = new JsonObject(); key.add("#", object("item", item.id().toString())); recycle.add("key", key);
+            recycle.add("result", object("id", "dyenamics:" + item.color().id + "_stained_glass"));
+            json(item.id().withPath("recipe/" + item.id().getPath() + "/glass.json"), recycle);
+        }
         copyCrafting(item.addon(), item.source(), item.id(), item.color());
     }
     private void copyCrafting(String addon, ResourceLocation source, ResourceLocation target, DyenamicColor color) {
         if (addon.equals("brewery") && source.getPath().equals("table")) return;
-        if (addon.equals("furniture") && LetsDoModule.VARIANTS.stream().anyMatch(v -> v.source().equals(source) && !v.nativePattern().contains("%s"))) return;
+        if (addon.equals("furniture") && PaletteModule.VARIANTS.stream().anyMatch(v -> v.source().equals(source) && !v.nativePattern().contains("%s"))) return;
         Map<String, String> substitutions = replacements(addon, color);
         for (String path : list(addon)) {
             if (!path.startsWith("data/" + addon + "/recipe/") || !path.endsWith(".json")) continue;
@@ -191,17 +223,23 @@ public final class LetsDoPack extends AbstractPackResources {
             JsonElement result = data.has("result") ? data.get("result") : data.get("outputItem");
             if (result == null || !result.isJsonObject() || !result.getAsJsonObject().has("id") || !(result.getAsJsonObject().get("id").getAsString().equals(source.toString()) || (source.toString().equals("brewery:patterned_carpet_block") && result.getAsJsonObject().get("id").getAsString().equals("brewery:patterned_carpet")))) continue;
             // Shapeless native recoloring recipes overlap the component-preserving recipes above.
-            if (data.get("type").getAsString().equals("minecraft:crafting_shapeless")) continue;
+            if (data.get("type").getAsString().equals("minecraft:crafting_shapeless")
+                    && (!java.util.Set.of("supplementaries", "suppsquared", "quark").contains(addon)
+                        || (data.has("ingredients") && data.get("ingredients").toString().contains(source.toString())))) continue;
             json(target.withPath("recipe/" + target.getPath() + "/upstream/" + path.substring(path.indexOf("/recipe/") + 8)), replaceIds(data, substitutions));
         }
     }
     private Map<String, String> replacements(String addon, DyenamicColor color) {
         Map<String, String> map = new HashMap<>();
-        LetsDoModule.VARIANTS.stream().filter(v -> v.addon().equals(addon) && v.color() == color).forEach(v -> map.put(v.source().toString(), v.id().toString()));
-        LetsDoModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(addon) && v.color() == color).forEach(v -> map.put(v.source().toString(), v.id().toString()));
-        if (addon.equals("brewery")) map.put("brewery:patterned_carpet", LetsDoModule.variant("brewery", "patterned_carpet", color).id().toString());
+        PaletteModule.VARIANTS.stream().filter(v -> v.addon().equals(addon) && v.color() == color).forEach(v -> map.put(v.source().toString(), v.id().toString()));
+        PaletteModule.EXTRA_ITEMS.stream().filter(v -> v.addon().equals(addon) && v.color() == color).forEach(v -> map.put(v.source().toString(), v.id().toString()));
+        if (addon.equals("brewery")) map.put("brewery:patterned_carpet", PaletteModule.variant("brewery", "patterned_carpet", color).id().toString());
         map.put("minecraft:white_dye", "dyenamics:" + color.id + "_dye");
         map.put("minecraft:white_wool", "dyenamics:" + color.id + "_wool");
+        if (java.util.Set.of("supplementaries", "suppsquared", "quark").contains(addon)) {
+            for (String material : List.of("terracotta", "stained_glass", "stained_glass_pane", "candle", "banner", "carpet"))
+                map.put("minecraft:white_" + material, "dyenamics:" + color.id + "_" + material);
+        }
         if (addon.equals("brewery")) {
             map.remove("minecraft:white_wool");
             map.put("minecraft:blue_wool", "dyenamics:" + color.id + "_wool");
@@ -210,7 +248,7 @@ public final class LetsDoPack extends AbstractPackResources {
         return map;
     }
     private void addUpstreamTags() {
-        for (String addon : LetsDoModule.VARIANTS.stream().map(LetsDoModule.Variant::addon).distinct().toList()) {
+        for (String addon : PaletteModule.VARIANTS.stream().map(PaletteModule.Variant::addon).distinct().toList()) {
             for (String path : list(addon)) {
                 if (!path.startsWith("data/") || !path.contains("/tags/") || !path.endsWith(".json")) continue;
                 JsonObject data = read(addon, path).getAsJsonObject();
@@ -227,10 +265,16 @@ public final class LetsDoPack extends AbstractPackResources {
             }
         }
     }
+    private void bridgeRecipe(String addon, String name) {
+        String path="recipe/" + name + ".json";
+        JsonObject recipe=read(addon,"data/" + addon + "/" + path).getAsJsonObject();
+        recipe.addProperty("type", "dyenamicscompat:" + addon + "/" + name);
+        json(ResourceLocation.fromNamespaceAndPath(addon,path),recipe);
+    }
     private void coloring(String path, ResourceLocation result, JsonArray ingredients) {
         JsonObject data = object("type", "dyenamicscompat:letsdo_coloring"); data.addProperty("category", "misc"); data.add("ingredients", ingredients);
         JsonObject output = object("id", result.toString()); output.addProperty("count", 1); data.add("result", output);
-        json(LetsDoModule.id("recipe/" + path + ".json"), data);
+        json(PaletteModule.id("recipe/" + path + ".json"), data);
     }
     private void addTag(ResourceLocation path, String value) {
         JsonArray values = tags.computeIfAbsent(path, key -> new JsonArray());
@@ -251,7 +295,7 @@ public final class LetsDoPack extends AbstractPackResources {
             JsonElement value = sourceJson.get(key);
             if (value == null) { value = JsonParser.parseString(new String(bytes(addon, path), StandardCharsets.UTF_8)); sourceJson.put(key, value); }
             return value.deepCopy(); }
-        catch (IOException e) { throw new IllegalStateException("Missing pinned Let's Do resource: " + addon + ":" + path, e); }
+        catch (IOException e) { throw new IllegalStateException("Missing pinned palette resource: " + addon + ":" + path, e); }
     }
     private static byte[] bytes(String addon, String path) throws IOException { return Files.readAllBytes(ModList.get().getModFileById(addon).getFile().findResource(path)); }
     private static boolean exists(String addon, String path) { return Files.isRegularFile(ModList.get().getModFileById(addon).getFile().findResource(path)); }
@@ -259,7 +303,7 @@ public final class LetsDoPack extends AbstractPackResources {
         return files.computeIfAbsent(addon, key -> {
             Path root = ModList.get().getModFileById(addon).getFile().findResource("");
             try (var paths = Files.walk(root.resolve("data"))) { return paths.filter(Files::isRegularFile).map(p -> root.relativize(p).toString().replace('\\', '/')).toList(); }
-            catch (IOException e) { throw new IllegalStateException("Could not inspect Let's Do data for " + addon, e); }
+            catch (IOException e) { throw new IllegalStateException("Could not inspect palette data for " + addon, e); }
         });
     }
     @Override public IoSupplier<InputStream> getRootResource(String... path) {

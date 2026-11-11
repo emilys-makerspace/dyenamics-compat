@@ -22,9 +22,9 @@ Planned integrations recorded on 2026-11-11. Unchecked entries are planned, not 
 - [ ] [Mekanism Additions](https://modrinth.com/mod/mekanism-additions)
 - [ ] [Furnish](https://www.curseforge.com/minecraft/mc-mods/furnish)
 - [ ] [Farmer's Delight](https://modrinth.com/mod/farmers-delight)
-- [ ] [Quark](https://modrinth.com/mod/quark)
-- [ ] [Supplementaries](https://modrinth.com/mod/supplementaries)
-- [ ] [Supplementaries Squared](https://modrinth.com/mod/supplementaries-squared)
+- [x] [Quark](https://modrinth.com/mod/quark) — shingles (blocks, slabs, stairs, vertical slabs), stools, framed glass/panes, and shards. Natural corundum colors are not dyeable and are outside this integration.
+- [x] [Supplementaries](https://modrinth.com/mod/supplementaries) — awnings, candle holders, ceiling/wall bunting, flags, presents, and trapped presents.
+- [x] [Supplementaries Squared](https://modrinth.com/mod/supplementaries-squared) — golden candle holders and sacks.
 - [ ] [Comforts](https://modrinth.com/mod/comforts)
 
 ### [Let's Do] series
