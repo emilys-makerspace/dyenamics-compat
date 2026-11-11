@@ -1,0 +1,167 @@
+[
+  {
+    "id": "alpinewhispers",
+    "name": "[Let's Do] Alpinewhispers",
+    "version": "1.0.3",
+    "filename": "letsdo-alpinewhispers-neoforge-1.0.3.jar",
+    "url": "https://cdn.modrinth.com/data/SSPTBIrB/versions/SR1AzHK6/letsdo-alpinewhispers-neoforge-1.0.3.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "8a0ea353af7644795e266794d23107c3b07a5a6129e11e82d61974be1090cac709f2777df62406d249fdd6053853ce1e8f2cf3eeaaa3909ca05f427722d9aef8"
+  },
+  {
+    "id": "bakery",
+    "name": "[Let's Do] Bakery",
+    "version": "2.1.8",
+    "filename": "letsdo-bakery-neoforge-2.1.8.jar",
+    "url": "https://cdn.modrinth.com/data/oNB5jhlA/versions/9QEPWtYp/letsdo-bakery-neoforge-2.1.8.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "33a83a597c746809bc423dcc367e83705977001d8488ed8ae560a41ee1c4f5ed0839f9a73eb92d6465df9d533128e140bc755d69e6b2631d1b91dcc9a004707a"
+  },
+  {
+    "id": "beachparty",
+    "name": "[Let's Do] Beachparty",
+    "version": "2.1.5",
+    "filename": "letsdo-beachparty-neoforge-2.1.5.jar",
+    "url": "https://cdn.modrinth.com/data/GyKzAh3l/versions/HN4rzKRl/letsdo-beachparty-neoforge-2.1.5.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "b992f87e638c3642816046b44bec1a3f41df01c61204bcedf3fee5ee7b229f64c0d327fcb3fbb758c7ded5b9d50da6b1a310ea23dcfbba8177022e8f9468ef36"
+  },
+  {
+    "id": "bloomingnature",
+    "name": "[Let's Do] BloomingNature",
+    "version": "1.1.12",
+    "filename": "letsdo-bloomingnature-neoforge-1.1.12.jar",
+    "url": "https://cdn.modrinth.com/data/4Vno77MY/versions/EKgADGat/letsdo-bloomingnature-neoforge-1.1.12.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "769d21901af97fe8434ad2d5948e5d8c144141f80949542a77a2c327f77e6fe6a4547fa9dbb76bdb16d46073d65be618974a7f3fc8026b69021aefd695950c40"
+  },
+  {
+    "id": "brewery",
+    "name": "[Let's Do] Brewery",
+    "version": "2.1.12",
+    "filename": "letsdo-brewery-neoforge-2.1.12.jar",
+    "url": "https://cdn.modrinth.com/data/b7NV2plI/versions/y9ZpG5jE/letsdo-brewery-neoforge-2.1.12.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "c4f6b1e2fd1a182cd9caf8ca4e397eb2329c2879189a20cd30d7164609a4a7976659f5c79b97109497b6a594e2c26f384494522ba5e407c2141b2c9a977dd877"
+  },
+  {
+    "id": "camping",
+    "name": "[Let's Do] Camping",
+    "version": "2.1.6",
+    "filename": "letsdo-camping-neoforge-2.1.6.jar",
+    "url": "https://cdn.modrinth.com/data/uJXTNuf0/versions/GdYcZwHn/letsdo-camping-neoforge-2.1.6.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "f47a9dac957faea4793d285e45f4d0b5f38815d3049ce7bfd024b765ece4cb2825a303c1132e203db6060c49b5f1c36c85ba65ff0cd2f79d21d392634412e744"
+  },
+  {
+    "id": "candlelight",
+    "name": "[Let's Do] Candlelight",
+    "version": "2.1.14",
+    "filename": "letsdo-candlelight-neoforge-2.1.14.jar",
+    "url": "https://cdn.modrinth.com/data/qwbArkQk/versions/aa3WioYe/letsdo-candlelight-neoforge-2.1.14.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "21c78be916707a5e52b7c9a660ff9690ccde87f3960859b42e673271b69b3f29df32297c8003034ac063e1158d6c32a890758c379a8c1ef4723404057807480c"
+  },
+  {
+    "id": "farm_and_charm",
+    "name": "[Let's Do] Farm & Charm",
+    "version": "1.1.27",
+    "filename": "letsdo-farm_and_charm-neoforge-1.1.27.jar",
+    "url": "https://cdn.modrinth.com/data/HJetCzWo/versions/lAc3mEva/letsdo-farm_and_charm-neoforge-1.1.27.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "f5c8502602715a906714c023de9db965a2d3a149f597af3baf3578e0e982129b202b483a143d3f1c4ddcccb754ced0ff1f8fd34ff4986965b56f988155c62187"
+  },
+  {
+    "id": "furniture",
+    "name": "[Let's Do] Furniture",
+    "version": "1.1.7",
+    "filename": "letsdo-furniture-neoforge-1.1.7.jar",
+    "url": "https://cdn.modrinth.com/data/3JQDJrYW/versions/n3hpLssf/letsdo-furniture-neoforge-1.1.7.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "5146f776972d69dfd43ccb93ba1520a79b3e45f06a9f1e41970658a786583d4d7ef206df0065926412fe7928254885c12427e02f30c43d2ccb2aaa9e778f91bc"
+  },
+  {
+    "id": "hearth_and_timber",
+    "name": "[Let's Do] Hearth & Timber",
+    "version": "1.0.4",
+    "filename": "letsdo-hearth_and_timber-neoforge-1.0.4.jar",
+    "url": "https://cdn.modrinth.com/data/paO4gjmE/versions/BlP6d5J9/letsdo-hearth_and_timber-neoforge-1.0.4.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "e20eb902358dc636d1a0c5fe77d5ad10f045a3f7ca16cb5aeb0552b38579389adb73e764ed261f475df149de03fba5bae559409b8b5e462d60f5005a01c8271a"
+  },
+  {
+    "id": "herbalbrews",
+    "name": "[Let's Do] HerbalBrews",
+    "version": "1.1.4",
+    "filename": "letsdo-herbalbrews-neoforge-1.1.4.jar",
+    "url": "https://cdn.modrinth.com/data/Eh11TaTm/versions/kGYbyn9P/letsdo-herbalbrews-neoforge-1.1.4.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "281bac102511bf7753371ab7ed488d6990dfb0caae0f216b931d3a05c74adfbe28330910e76d7eea0268f0a7d64997a7c0d7d9b3fc9efb43d9711487f36b4989"
+  },
+  {
+    "id": "lilis_lucky_lures",
+    "name": "[Let's Do] Lilis Lucky Lures",
+    "version": "1.1.5",
+    "filename": "letsdo-lilis_lucky_lures-neoforge-1.1.5.jar",
+    "url": "https://cdn.modrinth.com/data/DMDVFZSF/versions/RTFJOHAV/letsdo-lilis_lucky_lures-neoforge-1.1.5.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "8efab457454060db90ff37daa35986a0567927d8b93e365302098329f155736176690d4099e07ab57c85175f31ef808f52fed610edd7e66779d1b77ea40958fa"
+  },
+  {
+    "id": "lilis_pottery",
+    "name": "[Let's Do] Lili's Pottery",
+    "version": "1.0.3",
+    "filename": "letsdo-lilis_pottery-neoforge-1.0.3.jar",
+    "url": "https://cdn.modrinth.com/data/sHiqiJIU/versions/vNj8tYW6/letsdo-lilis_pottery-neoforge-1.0.3.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "b0ad98fb0039f0d4b8b97f2d0e86c5cd99a82af224c63d9732bf0ffeba89c48ddf8189f25d87a33eb472090afe1d37654dc098d55a2baa0f6492adf5bbf193d5"
+  },
+  {
+    "id": "meadow",
+    "name": "[Let's Do] Meadow",
+    "version": "1.4.9",
+    "filename": "letsdo-meadow-neoforge-1.4.9.jar",
+    "url": "https://cdn.modrinth.com/data/ra7o6Sl7/versions/SdTfMLxH/letsdo-meadow-neoforge-1.4.9.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "d2964067e4e515c99f230d0c318497ae75c939f058eaaf686a3517f5b5277ffa431d3e9fd048715be965d2bc47bd28bea4f6b6fa880ce9ebbe2a38a989a8c783"
+  },
+  {
+    "id": "vinery",
+    "name": "[Let's Do] Vinery",
+    "version": "1.5.5",
+    "filename": "letsdo-vinery-neoforge-1.5.5.jar",
+    "url": "https://cdn.modrinth.com/data/1DWmBJVA/versions/DLINXOWN/letsdo-vinery-neoforge-1.5.5.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "deeef53f933cd7750d32800009deff31e47c4e7e71e3a4e3714e3ecf9fede3190ab0db7fad10817d352de7cc4cbdea5b308e592ebd6bf8f0a921a2cf98f6871d"
+  },
+  {
+    "id": "wildernature",
+    "name": "[Let's Do] Wilder Nature",
+    "version": "1.1.6",
+    "filename": "letsdo-wildernature-neoforge-1.1.6.jar",
+    "url": "https://cdn.modrinth.com/data/AAiRU4aQ/versions/jwvFJJGi/letsdo-wildernature-neoforge-1.1.6.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "e44694b5e2b45072ff82b0cd36e6b444954dab13108891e30467f9845d9120df575d92165ecb160f8f91ab1191be346125d1f9d83c0c95a059ca0c0329e63626"
+  },
+  {
+    "id": "architectury",
+    "filename": "architectury-13.0.11-neoforge.jar",
+    "url": "https://edge.forgecdn.net/files/8492/726/architectury-13.0.11-neoforge.jar",
+    "hashAlgorithm": "SHA-1",
+    "hash": "008656a0702801174b8ec245ed7aad1921d6e9f1"
+  },
+  {
+    "id": "curios",
+    "filename": "curios-neoforge-9.5.1+1.21.1.jar",
+    "url": "https://cdn.modrinth.com/data/vvuO3ImH/versions/yohfFbgD/curios-neoforge-9.5.1%2B1.21.1.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "5981a267686b744e7e3c227f78cbcd5267c14ac6979a28e814695f4589273998563147207fef4a5cdb7cdbdc39797cd95d9e4abadb55869f18e02a38d0654ae5"
+  },
+  {
+    "id": "biolith",
+    "filename": "biolith-neoforge-3.0.14.jar",
+    "url": "https://cdn.modrinth.com/data/iGEl6Crx/versions/EAjbdreT/biolith-neoforge-3.0.14.jar",
+    "hashAlgorithm": "SHA-512",
+    "hash": "49d225425627eca3b52514752ad297d39c571853a72f4e539c6e233a1289126fbb50593b01af2a782369e1aca55654e225ae25d494c3885baf6ed9fe212887ad"
+  }
+]

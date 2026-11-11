@@ -1,6 +1,8 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.create;
 
-import ca.emilybelnavis.mcmods.dyenamicscompat.create.client.PaletteTextures;
+import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
+
+import ca.emilybelnavis.mcmods.dyenamicscompat.PaletteTextures;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlock;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -82,7 +84,7 @@ public final class NativeChecks {
                 byte[] redPng = create.getInputStream(create.getEntry("assets/create/textures/block/" + pattern.formatted("red") + ".png")).readAllBytes();
                 BufferedImage white = ImageIO.read(new ByteArrayInputStream(whitePng));
                 BufferedImage red = ImageIO.read(new ByteArrayInputStream(redPng));
-                for (CompatColor color : CompatColor.values()) {
+                for (DyenamicColor color : DyenamicColor.values()) {
                     BufferedImage output = ImageIO.read(new ByteArrayInputStream(PaletteTextures.recolor(whitePng, redPng, color.rgb)));
                     boolean changed = false;
                     for (int y = 0; y < white.getHeight(); y++) {
@@ -105,7 +107,7 @@ public final class NativeChecks {
         try (URLClassLoader loader = new URLClassLoader(new URL[]{production}, NativeChecks.class.getClassLoader()) {
             @Override
             protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-                if (name.startsWith("com.simibubi.create.") || name.startsWith("cy.jdkdigital.dyenamics.")) throw new ClassNotFoundException(name);
+                if (name.startsWith("com.simibubi.create.") || name.startsWith("cy.jdkdigital.dyenamics.") || name.startsWith("net.satisfy.") || name.startsWith("dev.architectury.")) throw new ClassNotFoundException(name);
                 if (name.startsWith("ca.emilybelnavis.mcmods.dyenamicscompat.")) {
                     synchronized (getClassLoadingLock(name)) {
                         Class<?> type = findLoadedClass(name);

@@ -1,30 +1,42 @@
 # Development
 
-Set `JAVA_HOME` to a JDK 21 installation, then:
+Use JDK 21. `./gradlew build` downloads and verifies the exact development jars from the [tismcraft pack](https://github.com/emilybelnavis/mc-modpacks/tree/main/tismcraft), then builds the mod and runs standalone checks. The mod and sources jars contain the MIT license and retained third-party notices; development jars and test mods are excluded.
+
+`./gradlew runClient` runs Create, Dyenamics, and all sixteen reviewed Let's Do mods. The project mod is registered in the development run. Create's libraries, Architectury, Curios, Foundation, and Biolith are included on the development runtime classpath. Pinned Let's Do download URLs and checksums are in `config/letsdo-dev-mods.json`.
+
+## Runtime profiles
+
+Use `-PcompatProfile=<profile>` with `runClient` or `runServer`:
+
+| Profile | Runtime content |
+| --- | --- |
+| `all` (default) | Create, Dyenamics, and the Let's Do collection |
+| `letsdo` | Dyenamics and the Let's Do collection, without Create |
+| `letsdo-only` | The Let's Do collection without Dyenamics or Create |
+| `both` | Create and Dyenamics |
+| `create` | Create without Dyenamics |
+| `dyenamics` | Dyenamics without compatibility mods |
+| `none` | No optional mods |
+
+Filter the collection with `-PletsdoMods=camping,furniture` (comma-separated mod IDs). Required upstream Farm & Charm is added automatically for Brewery, Bakery, and Candlelight. Runtime directories are isolated by profile under `run/`.
+
+The pinned Dyenamics 3.5.0 jar incorrectly declares Minecraft `[1.21,1.21.1)`. For profiles containing it, `prepareDevRuntime` creates a fresh `config/fml.toml` with `dependencyOverrides.dyenamics = ["-minecraft"]`. This development-only override leaves upstream jars and existing configs untouched. It is not shipped in the release. The same upstream metadata issue affects installations using this exact jar without an appropriate override or upstream fix.
+
+## Verification
 
 ```sh
-./gradlew setupDevMods
 ./gradlew build
-./gradlew runClient
+python3 tools/validate_resources.py
+./gradlew help --task runClient
+./gradlew runServer -PregistryProbe
+./gradlew runServer -PregistryProbe -PcompatProfile=none
+./gradlew runServer -PregistryProbe -PcompatProfile=letsdo-only
+./gradlew runServer -PregistryProbe -PcompatProfile=letsdo -PletsdoMods=camping,furniture
+./gradlew runGameTestServer -PworldTests -PcompatProfile=letsdo -PletsdoMods=brewery,camping,furniture,hearth_and_timber,lilis_pottery
 ```
 
-The mod is registered in `neoForge.mods`, and the default development runtime includes both target mods plus Create's bundled Registrate, Ponder, and Flywheel libraries. `setupDevMods` downloads and checksum-verifies the pack's exact jars, extracting those libraries for development only. No optional mod jars are packaged in the release.
+`registryProbe` enables a release-excluded test mod. It checks registry gates, every registered Let's Do block state, entity save/load, generated textures/models, and recipe decoding, writes a JSON report under `build/verification/`, then exits before starting a server or world. `worldTests` enables the same test mod plus eleven GameTests in a disposable Minecraft test world. Neither flag affects the published jar.
 
-Test independent installations with isolated directories:
+`verifyNative` covers component copying, palette texture generation, and entry-point loading with optional APIs hidden. `tools/validate_resources.py` checks the static Create resources; Let's Do resources are generated at runtime and checked by `registryProbe`. `tools/generate_resources.py` regenerates the static Create JSON.
 
-```sh
-./gradlew runClient -PcompatProfile=both
-./gradlew runClient -PcompatProfile=create
-./gradlew runClient -PcompatProfile=dyenamics
-./gradlew runClient -PcompatProfile=none
-```
-
-`runServer` supports the same profiles. `./gradlew verifyNative` checks toolbox component copying, all 90 generated textures, and entry-point linkage with compatibility APIs hidden. `python3 tools/validate_resources.py` validates conditional data and model/texture references against the exact local upstream jars. `python3 tools/generate_resources.py` regenerates the checked-in JSON.
-
-The pinned Dyenamics jar declares Minecraft `[1.21,1.21.1)`, excluding its own target version. For development runs containing Dyenamics, `prepareDevRuntime` creates a fresh `config/fml.toml` with `dependencyOverrides.dyenamics = ["-minecraft"]`. This override is confined to development directories; it neither patches the upstream jar nor ships in the release. Existing development configs are left intact. The same upstream metadata issue affects installations using this exact Dyenamics jar without an appropriate override or upstream fix.
-
-## Verification status
-
-All production Java sources have compiled directly against the mapped NeoForge 21.1.252 and pinned Create APIs. Standalone checks passed using actual Minecraft classes: component copying, all generated palette textures, and entry-point linkage with optional APIs hidden. Resource validation results are in `build/verification/resources.json` when the validator runs.
-
-Verified on 2026-11-11: `./gradlew tasks --all` exposes `runClient`, and `./gradlew build runClient` builds successfully, passes the native checks, and launches the client with Create, Dyenamics, and Dyenamics Compat loaded. The client completes resource/model/texture loading without mod-loading errors. The game is left running for interactive testing. World loading/uninstallation, all four full runtime profiles, and in-game interactions still require verification before publishing.
+See [LETSDO.md](LETSDO.md) for audited coverage and known upstream limitations. Further visual review and complete uninstall/reinstall testing remain useful before publishing.

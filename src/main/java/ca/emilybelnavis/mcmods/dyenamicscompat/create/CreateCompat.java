@@ -1,5 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.create;
 
+import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
+
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicsCompat;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllDataComponents;
@@ -39,11 +41,11 @@ public final class CreateCompat {
     private static final DeferredRegister<BlockEntityType<?>> ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, DyenamicsCompat.MOD_ID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(Registries.RECIPE_SERIALIZER, DyenamicsCompat.MOD_ID);
 
-    public record Variant(CompatColor color, String family, DeferredBlock<? extends Block> block) {}
+    public record Variant(DyenamicColor color, String family, DeferredBlock<? extends Block> block) {}
     public static final List<Variant> VARIANTS = new ArrayList<>();
 
     static {
-        for (CompatColor color : CompatColor.values()) {
+        for (DyenamicColor color : DyenamicColor.values()) {
             add(color, "seat", () -> new SeatBlock(softProperties(), color.analogue));
             add(color, "sail", () -> SailBlock.withCanvas(softProperties().noOcclusion(), color.analogue));
             add(color, "valve_handle", () -> new CompatValveBlock(metalProperties().noOcclusion()));
@@ -65,7 +67,7 @@ public final class CreateCompat {
         return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0F).sound(SoundType.NETHERITE_BLOCK);
     }
 
-    private static <T extends Block> void add(CompatColor color, String family, Supplier<T> factory) {
+    private static <T extends Block> void add(DyenamicColor color, String family, Supplier<T> factory) {
         String name = "create_" + color.id + "_" + family;
         DeferredBlock<T> block = BLOCKS.register(name, factory);
         ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
@@ -80,7 +82,7 @@ public final class CreateCompat {
         return VARIANTS.stream().filter(v -> v.block().get() == block).findFirst().orElse(null);
     }
 
-    public static Block block(CompatColor color, String family) {
+    public static Block block(DyenamicColor color, String family) {
         return VARIANTS.stream().filter(v -> v.color() == color && v.family().equals(family))
                 .findFirst().orElseThrow().block().get();
     }

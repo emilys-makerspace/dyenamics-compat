@@ -4,7 +4,7 @@ Extra Dyenamics colors for other Minecraft mods, with no hard mod dependencies o
 
 **Minecraft 1.21.1 · NeoForge 21.1.252 · Java 21**
 
-Currently supports **Create 6.0.10** with **Dyenamics 3.5.0**: 18 extra colors for seats, sails, valve handles, and toolboxes. Find them in Create’s main creative tab, craft them, or recolor placed blocks with dyes.
+Adds 18 extra colors to **Create** and existing dyeable families in **[Let’s Do] Brewery, Camping, Furniture, Hearth & Timber, and Lili’s Pottery**. Find variants in each mod’s creative tab, craft them, or recolor placed blocks with dyes. See [Let’s Do coverage](LETSDO.md) for the full sixteen-mod review.
 
 See the [roadmap](ROADMAP.md) for planned compatibility.
 

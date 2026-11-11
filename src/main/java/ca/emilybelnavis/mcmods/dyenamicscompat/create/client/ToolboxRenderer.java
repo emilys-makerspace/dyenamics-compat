@@ -1,6 +1,6 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.create.client;
 
-import ca.emilybelnavis.mcmods.dyenamicscompat.create.CompatColor;
+import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
 import ca.emilybelnavis.mcmods.dyenamicscompat.create.CompatToolboxEntity;
 import ca.emilybelnavis.mcmods.dyenamicscompat.create.CreateCompat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,10 +19,10 @@ import net.minecraft.core.Direction;
 
 /** Animation transforms follow Create's MIT-licensed ToolboxRenderer. */
 public final class ToolboxRenderer extends SmartBlockEntityRenderer<CompatToolboxEntity> {
-    private static final Map<CompatColor, PartialModel> LIDS = new EnumMap<>(CompatColor.class);
+    private static final Map<DyenamicColor, PartialModel> LIDS = new EnumMap<>(DyenamicColor.class);
 
     public static void initModels() {
-        for (CompatColor color : CompatColor.values()) {
+        for (DyenamicColor color : DyenamicColor.values()) {
             LIDS.put(color, PartialModel.of(CreateCompat.id("block/toolbox/lid/" + color.id)));
         }
     }

@@ -14,6 +14,10 @@ java {
 repositories { mavenCentral() }
 
 sourceSets {
+    integrationProbe {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
     nativeChecks {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
@@ -27,25 +31,40 @@ def createLibraries = fileTree('libs') {
     include '*.jar'
     exclude 'create-*.jar', 'dyenamics-*.jar'
 }
-def compatProfile = providers.gradleProperty('compatProfile').getOrElse('both')
-if (!(compatProfile in ['both', 'create', 'dyenamics', 'none'])) {
-    throw new GradleException('compatProfile must be both, create, dyenamics, or none')
+def letsDoLibraries = fileTree('libs/letsdo') { include '*.jar' }
+def letsDoSpecs = new groovy.json.JsonSlurper().parse(file('config/letsdo-dev-mods.json'))
+def requestedLetsDo = providers.gradleProperty('letsdoMods').map { it.split(',').collect { name -> name.trim() } as Set }.getOrElse(
+        letsDoSpecs.findAll { it.filename.startsWith('letsdo-') }.collect { it.id } as Set)
+def knownLetsDo = letsDoSpecs.findAll { it.filename.startsWith('letsdo-') }.collect { it.id } as Set
+if (!knownLetsDo.containsAll(requestedLetsDo)) throw new GradleException('Unknown letsdoMods: ' + (requestedLetsDo - knownLetsDo))
+def runtimeLetsDo = new LinkedHashSet(requestedLetsDo)
+if (runtimeLetsDo.any { it in ['bakery', 'brewery', 'candlelight'] }) runtimeLetsDo.add('farm_and_charm')
+def letsDoRuntime = files(letsDoSpecs.findAll { runtimeLetsDo.contains(it.id) || !it.filename.startsWith('letsdo-') }
+        .collect { file('libs/letsdo/' + it.filename) }) + files('libs/letsdo/foundation-neoforge-1.0.7.jar')
+def compatProfile = providers.gradleProperty('compatProfile').getOrElse('all')
+if (!(compatProfile in ['all', 'letsdo', 'letsdo-only', 'both', 'create', 'dyenamics', 'none'])) {
+    throw new GradleException('compatProfile must be all, letsdo, letsdo-only, both, create, dyenamics, or none')
 }
 dependencies {
     compileOnly createJar
     compileOnly createLibraries
+    compileOnly letsDoLibraries
+    integrationProbeCompileOnly letsDoLibraries
+    nativeChecksImplementation letsDoLibraries
     nativeChecksImplementation createJar
     nativeChecksImplementation createLibraries
-    if (compatProfile in ['both', 'create']) {
+    if (compatProfile in ['all', 'letsdo', 'letsdo-only']) runtimeOnly letsDoRuntime
+    if (compatProfile in ['all', 'both', 'create']) {
         runtimeOnly createJar
         runtimeOnly createLibraries
     }
-    if (compatProfile in ['both', 'dyenamics']) runtimeOnly dyenamicsJar
+    if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics']) runtimeOnly dyenamicsJar
 }
 
 neoForge {
     version = '21.1.252'
     addModdingDependenciesTo(sourceSets.nativeChecks)
+    addModdingDependenciesTo(sourceSets.integrationProbe)
     runs {
         client { client(); gameDirectory = file('run/' + compatProfile + '/client') }
         server {
@@ -89,6 +108,26 @@ tasks.register('setupDevMods') {
             def digest = java.security.MessageDigest.getInstance(spec[2]).digest(target.bytes).encodeHex().toString()
             if (digest != spec[3]) throw new GradleException('Checksum mismatch: ' + spec[0])
         }
+        def letsDoSpecifications = new groovy.json.JsonSlurper().parse(file('config/letsdo-dev-mods.json'))
+        file('libs/letsdo').mkdirs()
+        letsDoSpecifications.each { spec ->
+            def target = file('libs/letsdo/' + spec.filename)
+            if (!target.exists()) {
+                def temporary = file(target.path + '.download')
+                try {
+                    new URI(spec.url).toURL().withInputStream { input -> temporary.withOutputStream { output -> output << input } }
+                    def digest = java.security.MessageDigest.getInstance(spec.hashAlgorithm).digest(temporary.bytes).encodeHex().toString()
+                    if (digest != spec.hash) throw new GradleException('Checksum mismatch: ' + spec.filename)
+                    java.nio.file.Files.move(temporary.toPath(), target.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                } finally { temporary.delete() }
+            }
+            def digest = java.security.MessageDigest.getInstance(spec.hashAlgorithm).digest(target.bytes).encodeHex().toString()
+            if (digest != spec.hash) throw new GradleException('Checksum mismatch: ' + spec.filename)
+        }
+        // Camping carries the newest Foundation needed by this pinned collection.
+        new java.util.zip.ZipFile(file('libs/letsdo/letsdo-camping-neoforge-2.1.6.jar')).withCloseable { zip ->
+            file('libs/letsdo/foundation-neoforge-1.0.7.jar').bytes = zip.getInputStream(zip.getEntry('META-INF/jarjar/foundation-neoforge-1.0.7.jar')).bytes
+        }
         new java.util.zip.ZipFile(file('libs/create-1.21.1-6.0.10.jar')).withCloseable { zip ->
             def metadata = new groovy.json.JsonSlurper().parse(zip.getInputStream(zip.getEntry('META-INF/jarjar/metadata.json')))
             metadata.jars.each { library ->
@@ -116,10 +155,10 @@ tasks.register('prepareDevRuntime') {
     description = 'Prepare isolated development run directories for the selected compatibility profile.'
     dependsOn tasks.named('setupDevMods')
     doLast {
-        if (compatProfile in ['both', 'dyenamics']) {
+        if (compatProfile in ['all', 'letsdo', 'both', 'dyenamics']) {
             // The pinned upstream Dyenamics jar incorrectly excludes Minecraft 1.21.1.
             // Use NeoForge's documented dev-run override, without modifying the upstream jar.
-            ['client', 'server'].each { kind ->
+            ['client', 'server', 'gametest'].each { kind ->
                 def config = file('run/' + compatProfile + '/' + kind + '/config/fml.toml')
                 if (!config.exists()) {
                     config.parentFile.mkdirs()
@@ -135,4 +174,25 @@ tasks.named('runServer') { dependsOn tasks.named('prepareDevRuntime') }
 // Include the project license in both the mod and source jars.
 tasks.withType(Jar).configureEach {
     from('LICENSE')
+}
+
+if (providers.gradleProperty('registryProbe').isPresent() || providers.gradleProperty('worldTests').isPresent()) {
+    neoForge.mods {
+        dyenamicscompat_probe { sourceSet sourceSets.integrationProbe }
+    }
+    neoForge.runs.configureEach {
+        systemProperty 'dyenamicscompat.probeExit', providers.gradleProperty('registryProbe').isPresent().toString()
+        systemProperty 'dyenamicscompat.probeReport', file('build/verification/letsdo-registry-' + compatProfile + '.json').absolutePath
+    }
+}
+
+if (providers.gradleProperty('worldTests').isPresent()) {
+    neoForge.runs {
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = file('run/' + compatProfile + '/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'dyenamicscompat_probe'
+        }
+    }
+    tasks.named('runGameTestServer') { dependsOn tasks.named('prepareDevRuntime') }
 }

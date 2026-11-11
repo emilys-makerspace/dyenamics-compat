@@ -1,6 +1,6 @@
 # Compatibility roadmap
 
-Planned integrations recorded on 2026-11-11. Unchecked entries are planned, not implemented; their order does not establish priority. Links below were supplied with the plan. Target versions should come from the [tismcraft modpack](https://github.com/emilybelnavis/mc-modpacks/tree/main/tismcraft).
+Planned integrations recorded on 2026-11-11. Unchecked entries are planned, not implemented; their order does not establish priority. Completed Let’s Do entries include either an implementation or a review finding no existing dyeable families, as detailed in [LETSDO.md](LETSDO.md). Links below were supplied with the plan. Target versions should come from the [tismcraft modpack](https://github.com/emilybelnavis/mc-modpacks/tree/main/tismcraft).
 
 ## Current integration
 
@@ -29,22 +29,24 @@ Planned integrations recorded on 2026-11-11. Unchecked entries are planned, not 
 
 ### [Let's Do] series
 
-- [ ] Alpinewhispers
-- [ ] Bakery
-- [ ] Beachparty
-- [ ] BloomingNature
-- [ ] Brewery
-- [ ] Camping
-- [ ] Candlelight
-- [ ] Farm & Charm
-- [ ] Furniture
-- [ ] Hearth & Timber
-- [ ] HerbalBrews
-- [ ] Lili's Pottery
-- [ ] Lili's Lucky Lures
-- [ ] Meadow
-- [ ] Vinery
-- [ ] Wilder Nature
+Scope: extend existing dyeable families only. Integrations live under `letsdo/<addon>`.
+
+- [x] Alpinewhispers
+- [x] Bakery
+- [x] Beachparty
+- [x] BloomingNature
+- [x] Brewery
+- [x] Camping
+- [x] Candlelight
+- [x] Farm & Charm
+- [x] Furniture
+- [x] Hearth & Timber
+- [x] HerbalBrews
+- [x] Lili's Pottery
+- [x] Lili's Lucky Lures
+- [x] Meadow
+- [x] Vinery
+- [x] Wilder Nature
 
 ### Macaw's series
 

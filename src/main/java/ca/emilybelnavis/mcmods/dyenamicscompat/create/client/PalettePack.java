@@ -1,7 +1,9 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.create.client;
 
+import ca.emilybelnavis.mcmods.dyenamicscompat.PaletteTextures;
+
 import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicsCompat;
-import ca.emilybelnavis.mcmods.dyenamicscompat.create.CompatColor;
+import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
 import ca.emilybelnavis.mcmods.dyenamicscompat.create.CreateCompat;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,7 +36,7 @@ public final class PalettePack extends AbstractPackResources {
 
     private PalettePack(PackLocationInfo location) {
         super(location);
-        for (CompatColor color : CompatColor.values()) {
+        for (DyenamicColor color : DyenamicColor.values()) {
             for (String pattern : PATTERNS) {
                 textures.put(CreateCompat.id("textures/block/" + pattern.formatted(color.id) + ".png"),
                         new Texture(pattern.formatted("white"), pattern.formatted("red"), color.rgb));

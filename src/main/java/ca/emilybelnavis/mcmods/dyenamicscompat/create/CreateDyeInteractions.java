@@ -1,5 +1,7 @@
 package ca.emilybelnavis.mcmods.dyenamicscompat.create;
 
+import ca.emilybelnavis.mcmods.dyenamicscompat.DyenamicColor;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.contraptions.bearing.SailBlock;
@@ -30,7 +32,7 @@ public final class CreateDyeInteractions {
         BlockState oldState = level.getBlockState(event.getPos());
         String family = family(oldState.getBlock());
         if (family == null) return;
-        CompatColor custom = customDye(event.getItemStack());
+        DyenamicColor custom = customDye(event.getItemStack());
         CreateCompat.Variant oldVariant = CreateCompat.variant(oldState.getBlock());
         // Vanilla-to-vanilla coloring remains entirely Create's responsibility.
         if (custom == null && oldVariant == null) return;
@@ -59,9 +61,9 @@ public final class CreateDyeInteractions {
         level.playSound(null, event.getPos(), SoundEvents.DYE_USE, SoundSource.BLOCKS, 1, 1);
     }
 
-    static CompatColor customDye(ItemStack stack) {
+    static DyenamicColor customDye(ItemStack stack) {
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        for (CompatColor color : CompatColor.values()) {
+        for (DyenamicColor color : DyenamicColor.values()) {
             if (itemId.equals(ResourceLocation.fromNamespaceAndPath("dyenamics", color.id + "_dye"))
                     || stack.is(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "dyes/" + color.id)))) return color;
         }

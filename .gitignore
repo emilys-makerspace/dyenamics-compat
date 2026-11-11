@@ -8,3 +8,5 @@ logs/
 .idea/
 *.iml
 tools/
+
+libs/**/*.jar

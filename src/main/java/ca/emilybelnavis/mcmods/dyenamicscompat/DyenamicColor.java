@@ -1,9 +1,9 @@
-package ca.emilybelnavis.mcmods.dyenamicscompat.create;
+package ca.emilybelnavis.mcmods.dyenamicscompat;
 
 import net.minecraft.world.item.DyeColor;
 
 /** Dyenamics 3.5.0's extra palette. The analogue is only used by Create's vanilla UI. */
-public enum CompatColor {
+public enum DyenamicColor {
     PEACH("peach", 12556403, DyeColor.ORANGE),
     AQUAMARINE("aquamarine", 2915711, DyeColor.CYAN),
     FLUORESCENT("fluorescent", 15657398, DyeColor.YELLOW),
@@ -27,7 +27,7 @@ public enum CompatColor {
     public final int rgb;
     public final DyeColor analogue;
 
-    CompatColor(String id, int rgb, DyeColor analogue) {
+    DyenamicColor(String id, int rgb, DyeColor analogue) {
         this.id = id;
         this.rgb = rgb;
         this.analogue = analogue;
