@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "dyenamicscompat:all_create_valve_handles"
+    },
+    {
+      "item": "dyenamics:spring_green_dye"
+    }
+  ],
+  "result": {
+    "id": "dyenamicscompat:create_spring_green_valve_handle",
+    "count": 1
+  }
+}

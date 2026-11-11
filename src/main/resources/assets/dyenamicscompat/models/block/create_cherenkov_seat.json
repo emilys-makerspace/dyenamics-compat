@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/seat",
+  "textures": {
+    "1": "dyenamicscompat:block/seat/top_cherenkov",
+    "2": "dyenamicscompat:block/seat/side_cherenkov"
+  }
+}

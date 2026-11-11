@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "dyenamicscompat:toolbox_coloring",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "dyenamicscompat:toolboxes"
+    },
+    {
+      "item": "minecraft:light_gray_dye"
+    }
+  ],
+  "result": {
+    "id": "create:light_gray_toolbox",
+    "count": 1
+  }
+}

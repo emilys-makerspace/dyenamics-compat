@@ -1,0 +1,221 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "dyenamicscompat:create_peach_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_peach_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_peach_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_seat",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_toolbox",
+      "required": false
+    }
+  ]
+}

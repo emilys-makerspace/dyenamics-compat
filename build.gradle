@@ -1,0 +1,138 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+group = 'ca.emilybelnavis.mcmods.dyenamicscompat'
+version = '1.0.0'
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+repositories { mavenCentral() }
+
+sourceSets {
+    nativeChecks {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+// These jars are development inputs only; none are bundled in the released mod.
+def createJar = files('libs/create-1.21.1-6.0.10.jar')
+def dyenamicsJar = files('libs/dyenamics-1.21.1-3.5.0.jar')
+def createLibraries = fileTree('libs') {
+    include '*.jar'
+    exclude 'create-*.jar', 'dyenamics-*.jar'
+}
+def compatProfile = providers.gradleProperty('compatProfile').getOrElse('both')
+if (!(compatProfile in ['both', 'create', 'dyenamics', 'none'])) {
+    throw new GradleException('compatProfile must be both, create, dyenamics, or none')
+}
+dependencies {
+    compileOnly createJar
+    compileOnly createLibraries
+    nativeChecksImplementation createJar
+    nativeChecksImplementation createLibraries
+    if (compatProfile in ['both', 'create']) {
+        runtimeOnly createJar
+        runtimeOnly createLibraries
+    }
+    if (compatProfile in ['both', 'dyenamics']) runtimeOnly dyenamicsJar
+}
+
+neoForge {
+    version = '21.1.252'
+    addModdingDependenciesTo(sourceSets.nativeChecks)
+    runs {
+        client { client(); gameDirectory = file('run/' + compatProfile + '/client') }
+        server {
+            server()
+            gameDirectory = file('run/' + compatProfile + '/server')
+            programArgument '--nogui'
+        }
+    }
+    mods {
+        dyenamicscompat { sourceSet sourceSets.main }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+tasks.named('runServer', JavaExec) { standardInput = System.in }
+
+// Fetch only development inputs. Upstream jars are never copied into the release jar.
+tasks.register('setupDevMods') {
+    group = 'development'
+    description = 'Download the exact tismcraft Create/Dyenamics jars and extract Create development libraries.'
+    doLast {
+        def specifications = [
+            ['create-1.21.1-6.0.10.jar', 'https://cdn.modrinth.com/data/LNytGWDc/versions/UjX6dr61/create-1.21.1-6.0.10.jar', 'SHA-512', '11cc8fc049d2f67f6548c7abfada6b82a3adb5c7ca410a742de04bbca76e03862c518721b88d806f6e6d768a4d68531fdb903a85859b25d1484d550cc7bafd4b'],
+            ['dyenamics-1.21.1-3.5.0.jar', 'https://edge.forgecdn.net/files/9011/797/dyenamics-1.21.1-3.5.0.jar', 'SHA-1', '2052d5df6ece75baa40539e1c87bc63ead3019e7']
+        ]
+        file('libs').mkdirs()
+        specifications.each { spec ->
+            def target = file('libs/' + spec[0])
+            if (!target.exists()) {
+                def temporary = file(target.path + '.download')
+                try {
+                    new URI(spec[1]).toURL().withInputStream { input -> temporary.withOutputStream { output -> output << input } }
+                    def digest = java.security.MessageDigest.getInstance(spec[2]).digest(temporary.bytes).encodeHex().toString()
+                    if (digest != spec[3]) throw new GradleException('Checksum mismatch: ' + spec[0])
+                    java.nio.file.Files.move(temporary.toPath(), target.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                } finally { temporary.delete() }
+            }
+            def digest = java.security.MessageDigest.getInstance(spec[2]).digest(target.bytes).encodeHex().toString()
+            if (digest != spec[3]) throw new GradleException('Checksum mismatch: ' + spec[0])
+        }
+        new java.util.zip.ZipFile(file('libs/create-1.21.1-6.0.10.jar')).withCloseable { zip ->
+            def metadata = new groovy.json.JsonSlurper().parse(zip.getInputStream(zip.getEntry('META-INF/jarjar/metadata.json')))
+            metadata.jars.each { library ->
+                file('libs/' + library.path.tokenize('/').last()).bytes = zip.getInputStream(zip.getEntry(library.path)).bytes
+            }
+        }
+    }
+}
+
+tasks.register('verifyNative', JavaExec) {
+    group = 'verification'
+    description = 'Check toolbox component retention, optional class loading, and generated palette textures.'
+    dependsOn tasks.named('nativeChecksClasses')
+    classpath = sourceSets.nativeChecks.runtimeClasspath
+    mainClass = 'ca.emilybelnavis.mcmods.dyenamicscompat.create.NativeChecks'
+    systemProperty 'java.awt.headless', 'true'
+    workingDir = projectDir
+}
+tasks.named('check') { dependsOn tasks.named('verifyNative') }
+
+tasks.named('compileJava') { dependsOn tasks.named('setupDevMods') }
+
+tasks.register('prepareDevRuntime') {
+    group = 'development'
+    description = 'Prepare isolated development run directories for the selected compatibility profile.'
+    dependsOn tasks.named('setupDevMods')
+    doLast {
+        if (compatProfile in ['both', 'dyenamics']) {
+            // The pinned upstream Dyenamics jar incorrectly excludes Minecraft 1.21.1.
+            // Use NeoForge's documented dev-run override, without modifying the upstream jar.
+            ['client', 'server'].each { kind ->
+                def config = file('run/' + compatProfile + '/' + kind + '/config/fml.toml')
+                if (!config.exists()) {
+                    config.parentFile.mkdirs()
+                    config.text = '# Development only: Dyenamics 3.5.0 has an exclusive 1.21.1 upper bound.\n[dependencyOverrides]\ndyenamics = ["-minecraft"]\n'
+                }
+            }
+        }
+    }
+}
+tasks.named('runClient') { dependsOn tasks.named('prepareDevRuntime') }
+tasks.named('runServer') { dependsOn tasks.named('prepareDevRuntime') }
+
+// Include the project license in both the mod and source jars.
+tasks.withType(Jar).configureEach {
+    from('LICENSE')
+}

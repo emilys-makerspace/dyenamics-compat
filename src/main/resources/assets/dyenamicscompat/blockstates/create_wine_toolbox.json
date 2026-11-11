@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "dyenamicscompat:block/create_wine_toolbox"
+    },
+    "facing=east": {
+      "model": "dyenamicscompat:block/create_wine_toolbox",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "dyenamicscompat:block/create_wine_toolbox",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dyenamicscompat:block/create_wine_toolbox",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "dyenamicscompat:toolbox_coloring",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "dyenamicscompat:all_create_toolboxes"
+    },
+    {
+      "item": "dyenamics:spring_green_dye"
+    }
+  ],
+  "result": {
+    "id": "dyenamicscompat:create_spring_green_toolbox",
+    "count": 1
+  }
+}

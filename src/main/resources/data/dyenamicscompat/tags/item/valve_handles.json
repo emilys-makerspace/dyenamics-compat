@@ -1,0 +1,77 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "dyenamicscompat:create_peach_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_valve_handle",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_valve_handle",
+      "required": false
+    }
+  ]
+}

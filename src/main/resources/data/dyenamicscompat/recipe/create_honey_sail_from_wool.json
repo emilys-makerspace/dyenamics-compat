@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "WS",
+    "SA"
+  ],
+  "key": {
+    "W": {
+      "item": "dyenamics:honey_wool"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "id": "dyenamicscompat:create_honey_sail",
+    "count": 2
+  }
+}

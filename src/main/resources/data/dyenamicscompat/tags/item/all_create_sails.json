@@ -1,0 +1,81 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "create:white_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_peach_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_sail",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_sail",
+      "required": false
+    }
+  ]
+}

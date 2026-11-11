@@ -1,0 +1,38 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="dyenamicscompat"
+version="1.0.0"
+displayName="Dyenamics Compat"
+authors="Emily Belnavis"
+description='''Optional Dyenamics color variants for compatible mods. No color enum mixins.'''
+
+[[dependencies.dyenamicscompat]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.252,21.2)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.dyenamicscompat]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.dyenamicscompat]]
+modId="create"
+type="optional"
+versionRange="[6.0.10,6.1)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.dyenamicscompat]]
+modId="dyenamics"
+type="optional"
+versionRange="[1.21.1-3.5.0,1.21.1-3.6)"
+ordering="AFTER"
+side="BOTH"

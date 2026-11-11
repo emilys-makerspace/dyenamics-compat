@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail"
+    },
+    "facing=north": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "dyenamicscompat:block/create_ultramarine_sail",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

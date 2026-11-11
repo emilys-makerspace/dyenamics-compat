@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "dyenamicscompat:all_create_seats"
+    },
+    {
+      "item": "dyenamics:fluorescent_dye"
+    }
+  ],
+  "result": {
+    "id": "dyenamicscompat:create_fluorescent_seat",
+    "count": 1
+  }
+}

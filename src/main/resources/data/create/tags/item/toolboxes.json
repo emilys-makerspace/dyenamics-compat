@@ -1,0 +1,77 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "dyenamicscompat:create_peach_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_aquamarine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_fluorescent_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_mint_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_maroon_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_bubblegum_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_lavender_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_persimmon_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_cherenkov_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_amber_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_honey_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_ultramarine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_spring_green_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_rose_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_navy_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_icy_blue_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_wine_toolbox",
+      "required": false
+    },
+    {
+      "id": "dyenamicscompat:create_conifer_toolbox",
+      "required": false
+    }
+  ]
+}
